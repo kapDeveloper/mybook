@@ -1,23 +1,23 @@
-"use client";
-
 import { useEffect } from "react";
-import { redirect } from "next/navigation";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+
 export default function isAuth(Component) {
   return function IsAuth(props) {
-    // const auth = false;
-
+    const router = useRouter();
     const { token } = useSelector((state) => state.auth);
 
-    // console.log(token);
     useEffect(() => {
       if (!token) {
-        redirect("/login");
+        router.push("/login");
       }
-    }, [token]);
+    }, [token, router]);
 
+    // Optionally render a loading indicator while checking auth status
     if (!token) {
-      return null;
+      return (
+        <div className="flex min-h-screen justify-center ">Loading...</div>
+      );
     }
 
     return <Component {...props} />;

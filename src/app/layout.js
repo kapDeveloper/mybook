@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
       <body>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <Navbar />
+            {/* <Navbar /> */}
             {children}
           </PersistGate>
         </Provider>

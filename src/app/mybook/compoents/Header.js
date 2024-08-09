@@ -4,6 +4,7 @@ import { TbMoon } from "react-icons/tb";
 import { FaSun } from "react-icons/fa6";
 import { usePathname, useRouter } from "next/navigation";
 import ToggleDarkMode from "@/app/(auth)/darkmode/ToggleDarkMode";
+import Navbar from "@/components/Navbar";
 
 function Header() {
   const router = useRouter();
@@ -19,6 +20,7 @@ function Header() {
   return (
     <div className="shadow-lightmode dark:shadow-customshadow px-2 z-20 bg-darkmode sm:px-28 py-4 sticky flex items-center justify-between top-0 left-0">
       <h1 className="font-bold">MyBook</h1>
+
       <div className="flex items-center gap-4">
         <button
           onClick={hadlingchanging}
@@ -27,6 +29,8 @@ function Header() {
           {btnname}
         </button>
         <ToggleDarkMode />
+
+        <Navbar />
       </div>
     </div>
   );

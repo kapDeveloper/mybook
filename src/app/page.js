@@ -1,3 +1,9 @@
+import LoginPage from "./(auth)/login/page";
+
 export default function Home() {
-  return <main>Welcome TO Home</main>;
+  return (
+    <main>
+      <LoginPage />
+    </main>
+  );
 }

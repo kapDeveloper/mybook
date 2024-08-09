@@ -6,7 +6,8 @@ import { setCredentials } from "@/features/authSlice";
 
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-function Page() {
+
+function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -129,4 +130,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default LoginPage;
