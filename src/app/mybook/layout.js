@@ -8,6 +8,8 @@ function layout({ children }) {
     <div className="bg-[#ead6d6] dark:bg-[#3f2727] min-h-[calc(100vh)]">
       <Header />
       <div className="mt-20">{children}</div>
+
+      <ToastContainer />
     </div>
   );
 }

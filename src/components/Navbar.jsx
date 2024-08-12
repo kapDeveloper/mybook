@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { clearCredentials } from "@/features/authSlice";
 
-import { logout } from "@/features/authSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 const Navbar = () => {
@@ -10,7 +9,7 @@ const Navbar = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(clearCredentials());
 
     router.push("/login");
   };

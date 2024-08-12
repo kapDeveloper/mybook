@@ -8,14 +8,14 @@ import { combineReducers } from "redux";
 
 // Combine your reducers
 const rootReducer = combineReducers({
-  [api.reducerPath]: api.reducer,
   auth: authReducer,
+  [api.reducerPath]: api.reducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"], // only auth will be persisted, you can add more reducers here if needed
+  whitelist: ["auth"], // Ensure this key matches the key in combineReducers
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -35,6 +35,7 @@ const store = configureStore({
         ],
       },
     }).concat(api.middleware),
+  devTools: process.env.NODE_ENV !== "production", // Ensure DevTools is enabled in development
 });
 
 // Create the persistor
