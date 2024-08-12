@@ -24,88 +24,77 @@ export default function CenterModel({
   const nameref = useRef(null);
   const amountref = useRef(null);
   const dispatch = useDispatch();
-  //   const incomeData = useSelector((state) => state.items.income);
-  //   const expanseData = useSelector((state) => state.items.expanse);
 
-  // fuction ......................
+  // Fetch data from the Redux store
+  // const incomeData = useSelector((state) => state.items.income);
+  // const expanseData = useSelector((state) => state.items.expanse);
 
+  // Function to close modal
   function closeModal() {
     setIsOpenModel(false);
   }
 
-  function openModal() {
-    setIsOpenModel(true);
-  }
-
-  // if edit from open
-  //   useEffect(() => {
-  //     if (isOpenModel) {
-  //       const data =
-  //         selectbtn === 0
-  //           ? incomeData.find((item) => item.id === selctEditId)
-  //           : expanseData.find((item) => item.id === selctEditId);
-  //       if (data) {
-  //         if (nameref.current) nameref.current.value = data.name || "";
-  //         if (amountref.current) amountref.current.value = data.amount || "";
-  //         setImg(data.img || null);
-  //       }
+  // Fetch and set data if editing
+  // useEffect(() => {
+  //   if (isOpenModel && modeltype === "edit") {
+  //     const data =
+  //       selectbtn === 0
+  //         ? incomeData.find((item) => item.id === selctEditId)
+  //         : expanseData.find((item) => item.id === selctEditId);
+  //     if (data) {
+  //       if (nameref.current) nameref.current.value = data.name || "";
+  //       if (amountref.current) amountref.current.value = data.amount || "";
+  //       setImg(data.img || null);
   //     }
-  //   }, [selctEditId, selectbtn, incomeData, expanseData, isOpenModel]);
+  //   }
+  // }, [selctEditId, selectbtn, incomeData, expanseData, isOpenModel, modeltype]);
 
-  //   comman fuction.....................
+  // Clear form function
   const clearfn = () => {
     nameref.current.value = "";
     amountref.current.value = "";
     setImg("");
     closeModal();
   };
-  // ........................submit fuction......................................
 
-  const handliingSubmit = (item) => {
+  // Submit function
+  const handliingSubmit = () => {
     if (!nameref.current.value || !amountref.current.value) {
       closeModal();
-    } else {
-      if (modeltype === "edit") {
-        let updatedData = {
-          id: selctEditId,
-          icon: img,
-          name: nameref.current.value,
-          amount: parseFloat(amountref.current.value),
-          time: "",
-        };
-        selectbtn === 0
-          ? (dispatch(updateIncome({ id: selctEditId, updatedData })),
-            toast("edit income  data!"))
-          : (dispatch(updateExpanse({ id: selctEditId, updatedData })),
-            toast("edit expanse  data!"));
-        clearfn();
-      } else if (modeltype === "add") {
-        let data = {
-          id: parseFloat(Math.random()),
-          icon: img,
-          name: nameref.current.value,
-          amount: amountref.current.value,
-          time: "",
-        };
-
-        selectbtn == 0
-          ? (dispatch(addcustomIconincome(data)), toast("add income  data!"))
-          : (dispatch(addcustomIconexpnse(data)), toast("add expanse  data!"));
-
-        clearfn();
-      } else if (modeltype === "singleicon") {
-        let data = {
-          id: Math.random(),
-          icon: img,
-          name: nameref.current.value,
-          amount: parseFloat(amountref.current.value),
-          time: "",
-          qly: 1,
-        };
-        dispatch(addsingleIcon(data)), toast("Add singalIncome data!");
-        clearfn();
-      }
+      return;
     }
+
+    const data = {
+      id: modeltype === "edit" ? selctEditId : Math.random(),
+      icon: img,
+      name: nameref.current.value,
+      amount: parseFloat(amountref.current.value),
+      time: "",
+    };
+
+    if (modeltype === "edit") {
+      if (selectbtn === 0) {
+        dispatch(updateIncome({ id: selctEditId, updatedData: data }));
+        toast("Edit income data!");
+      } else {
+        dispatch(updateExpanse({ id: selctEditId, updatedData: data }));
+        toast("Edit expense data!");
+      }
+    } else if (modeltype === "add") {
+      if (selectbtn === 0) {
+        dispatch(addcustomIconincome(data));
+        toast("Add income data!");
+      } else {
+        dispatch(addcustomIconexpnse(data));
+        toast("Add expense data!");
+      }
+    } else if (modeltype === "singleicon") {
+      data.qly = 1;
+      dispatch(addsingleIcon(data));
+      toast("Add single income data!");
+    }
+
+    clearfn();
   };
 
   return (
@@ -147,10 +136,10 @@ export default function CenterModel({
                       : ""}
                   </Dialog.Title>
                   <div className="mt-2 flex justify-end">
-                    <div className="w-24  text-3xl hover:bg-gray-200 dark:hover:bg-[#91565663] rounded-full  h-24 border-2 p-1">
+                    <div className="w-24 text-3xl hover:bg-gray-200 dark:hover:bg-[#91565663] rounded-full h-24 border-2 p-1">
                       <Image
                         onClick={() => fileref.current.click()}
-                        className="w-full h-full  rounded-full"
+                        className="w-full h-full rounded-full"
                         src={img ? img : "/assets/images/shirt.png"}
                         alt=""
                       />
@@ -165,20 +154,20 @@ export default function CenterModel({
                     </div>
                   </div>
                   <div className="w-full p-[24px] shadow-lightmode dark:shadow-customshadow mt-5 rounded-lg">
-                    <h6>income Name:-</h6>
+                    <h6>Item Name:</h6>
                     <input
                       ref={nameref}
                       onKeyDown={(e) =>
-                        e.key == "Enter" && amountref.current.focus()
+                        e.key === "Enter" && amountref.current.focus()
                       }
                       className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
                       type="text"
                     />
 
-                    <h6 className="mt-5">Amount:-</h6>
+                    <h6 className="mt-5">Amount:</h6>
                     <input
                       ref={amountref}
-                      onKeyDown={(e) => e.key == "Enter" && handliingSubmit()}
+                      onKeyDown={(e) => e.key === "Enter" && handliingSubmit()}
                       className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
                       type="number"
                     />
@@ -187,13 +176,13 @@ export default function CenterModel({
                         onClick={closeModal}
                         className="min-h-[50px] shadow-lightmode dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold active:shadow-lightmodeclick dark:active:shadow-buttonclick"
                       >
-                        cancel
+                        Cancel
                       </button>
                       <button
-                        onClick={() => handliingSubmit()}
-                        className="min-h-[50px] shadow-lightmode dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold  active:shadow-lightmodeclick dark:active:shadow-buttonclick"
+                        onClick={handliingSubmit}
+                        className="min-h-[50px] shadow-lightmode dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold active:shadow-lightmodeclick dark:active:shadow-buttonclick"
                       >
-                        Add
+                        {modeltype === "edit" ? "Save" : "Add"}
                       </button>
                     </div>
                   </div>
