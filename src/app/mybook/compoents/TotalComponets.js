@@ -2,26 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 function TotalComponets() {
-  const income = useSelector((state) => state.items.income);
-  const ex = useSelector((state) => state.items.expanse);
+  // const income = useSelector((state) => state.items.income);
+  // const ex = useSelector((state) => state.items.expanse);
   const [incomeTotle, setIncomeTotle] = useState(0);
   const [expanse, setExpanse] = useState(0);
 
-  useEffect(() => {
-    const totalIncome = income.reduce(
-      (acc, item) => acc + parseFloat(item.amount),
-      0
-    );
-    setIncomeTotle(totalIncome);
-  }, [income]);
+  // useEffect(() => {
+  //   const totalIncome = income.reduce(
+  //     (acc, item) => acc + parseFloat(item.amount),
+  //     0
+  //   );
+  //   setIncomeTotle(totalIncome);
+  // }, [income]);
 
-  useEffect(() => {
-    const totalExpanse = ex.reduce(
-      (acc, item) => acc + parseFloat(item.amount),
-      0
-    );
-    setExpanse(totalExpanse);
-  }, [ex]);
+  // useEffect(() => {
+  //   const totalExpanse = ex.reduce(
+  //     (acc, item) => acc + parseFloat(item.amount),
+  //     0
+  //   );
+  //   setExpanse(totalExpanse);
+  // }, [ex]);
 
   return (
     <div>

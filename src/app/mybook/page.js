@@ -23,17 +23,17 @@ function page() {
             }}
             className="min-h-[50px] shadow-lightmode active:shadow-lightmodeclick dark:shadow-customshadow w-full rounded-lg text-white font-bold dark:active:shadow-buttonclick"
           >
-            {/* {CustomIcon ? "CustomIcon" : "CustomInput"} */}
+            {CustomIcon ? "CustomIcon" : "CustomInput"}
           </button>
           <div className="mt-5">
-            {/* {CustomIcon ? <AddForm /> : <AddIconFrom />} */}
+            {CustomIcon ? <AddForm /> : <AddIconFrom />}
           </div>
         </div>
         <div className="col-span-12 xl:col-span-6 order-2 md:order-3 xl:order-2 shadow-lightmode dark:shadow-customshadow min-h-[400px]  rounded-xl p-[24px]">
-          {/* <CenterContainer /> */}
+          <CenterContainer />
         </div>
         <div className="col-span-12 md:col-span-6 xl:col-span-3 mt-6 xl:mt-0 order-3 md:order-2 xl:order-3 shadow-lightmode dark:shadow-customshadow h-[300px] flex flex-col p-[24px]  items-center rounded-xl">
-          {/* <TotalComponets /> */}
+          <TotalComponets />
         </div>
       </div>
 

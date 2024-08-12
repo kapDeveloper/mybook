@@ -25,25 +25,25 @@ function CenterContainer() {
 
   const rendomColor = ["red", "green", "blue", "#c3c388"];
 
-  const removeItem = (id) => {
-    selectbtn == 0
-      ? (dispach(deleteIncome(id)), toast("Delete income icon data!"))
-      : (dispach(deleteExpanse(id)), toast("Delete expanse icon data!"));
-  };
+  // const removeItem = (id) => {
+  //   selectbtn == 0
+  //     ? (dispach(deleteIncome(id)), toast("Delete income icon data!"))
+  //     : (dispach(deleteExpanse(id)), toast("Delete expanse icon data!"));
+  // };
 
-  const incomeData = useSelector((state) => state?.items?.income);
-  const expanseData = useSelector((state) => state?.items?.expanse);
+  // const incomeData = useSelector((state) => state?.items?.income);
+  // const expanseData = useSelector((state) => state?.items?.expanse);
 
-  const [shawdata, setShawdata] = useState();
-  useEffect(() => {
-    selectbtn == 0 ? setShawdata(incomeData) : setShawdata(expanseData);
-  }, [selectbtn, incomeData, expanseData]);
+  // const [shawdata, setShawdata] = useState();
+  // useEffect(() => {
+  //   selectbtn == 0 ? setShawdata(incomeData) : setShawdata(expanseData);
+  // }, [selectbtn, incomeData, expanseData]);
 
   return (
     <>
       <TabButton selectbtn={selectbtn} setselectbtn={setselectbtn} />
       <div className="flex flex-col gap-3 mt-5 h-[500px] overflow-auto">
-        {shawdata?.map((item, index) => {
+        {/* {shawdata?.map((item, index) => {
           const backgroundColor = rendomColor[index % rendomColor.length];
           return (
             <>
@@ -83,16 +83,16 @@ function CenterContainer() {
               </Tooltip>
             </>
           );
-        })}
+        })} */}
       </div>
 
-      <CenterModel
+      {/* <CenterModel
         isOpenModel={isOpenModel}
         setIsOpenModel={setIsOpenModel}
         modeltype={modeltype}
         selctEditId={selctEditId}
         selectbtn={selectbtn}
-      />
+      /> */}
     </>
   );
 }
