@@ -1,12 +1,8 @@
 "use client";
 import React, { lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addIncome,
-  addExpanse,
-  deletecustomIconincome,
-  deletecustomIconexpnse,
-} from "../../store/features/counter";
+import Image from "next/image";
+
 import { toast } from "react-toastify";
 
 const Tooltip = lazy(() => import("./Tooltip"));
@@ -84,7 +80,7 @@ function AddIconFrom() {
                         <Tooltip text={'remove'} fn={() => testfn(item.id)}>
                             <div onClick={() => handlingadditem(item)}>
                                 <div className='w-24  text-3xl hover:bg-gray-200 dark:hover:bg-[#91565663] rounded-full  h-24 border-dashed border-2 p-2'>
-                                    <img className='w-full h-full  rounded-full' src={item.icon ? item.icon : "/assets/images/shirt.png"} alt="" />
+                                    <Image className='w-full h-full  rounded-full' src={item.icon ? item.icon : "/assets/images/shirt.png"} alt="" />
                                 </div>
                                 <p className='pl-3 text-sm'>Icon Name</p>
                             </div>
@@ -92,12 +88,12 @@ function AddIconFrom() {
                     )
                 })} */}
       </div>
-      {/* <CenterModel
+      <CenterModel
         isOpenModel={isOpenModel}
         setIsOpenModel={setIsOpenModel}
         selectbtn={selectbtn}
         modeltype={modeltype}
-      /> */}
+      />
     </>
   );
 }
