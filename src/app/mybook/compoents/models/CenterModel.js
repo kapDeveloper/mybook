@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { useUpdateIncomeMutation } from "@/services/incomeApi";
 
+import { useUpdateExpenseMutation } from "@/services/expenseApi";
 export default function CenterModel({
   isOpenModel,
   setIsOpenModel,
@@ -14,6 +15,9 @@ export default function CenterModel({
   const fileref = useRef(null);
   const nameref = useRef(null);
   const amountref = useRef(null);
+
+  //
+  const [updateExpense] = useUpdateExpenseMutation();
 
   // Initialize mutations
   const [updateIncome] = useUpdateIncomeMutation();
@@ -48,7 +52,7 @@ export default function CenterModel({
         await updateIncome({ id: selctEditId, formData }).unwrap();
         toast.success("Item updated successfully!");
       } else {
-        toast.error("Failed to add income data.");
+        toast.error("Failed to update income data.");
       }
       clearfn(); // Clear the form after submission
     } catch (error) {

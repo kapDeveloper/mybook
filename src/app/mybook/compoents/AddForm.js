@@ -2,21 +2,18 @@ import React, { useRef, useState } from "react";
 import { useCreateIncomeMutation } from "@/services/incomeApi";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { useGetIncomesQuery } from "@/services/incomeApi";
 
 ///
 
 function AddForm() {
   const [selectbtn, setselectbtn] = useState(0);
   const [createIncome] = useCreateIncomeMutation();
-  const { data } = useGetIncomesQuery();
 
   const nameref = useRef(null);
   const amountref = useRef(null);
-  const imgRef = useRef(null); // Reference for the optional image input
+  const imgRef = useRef(null);
 
   const { user } = useSelector((state) => state.auth);
-  // console.log("user addform", user._id);
 
   // Function to handle form submission
   const handlingAdd = async () => {
