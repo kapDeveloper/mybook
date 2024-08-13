@@ -40,7 +40,6 @@ export const incomeApi = createApi({
         delete formData.img;
 
         return {
-          url: `/${id}`,
           method: "PUT",
           body:
             formData instanceof FormData ? formData : JSON.stringify(formData),

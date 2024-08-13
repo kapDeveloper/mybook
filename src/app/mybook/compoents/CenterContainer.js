@@ -37,7 +37,6 @@ function CenterContainer() {
   }
 
   const handleDelete = async (postId) => {
-    console.log(postId);
     try {
       await deleteIncome(postId).unwrap();
       refetch();

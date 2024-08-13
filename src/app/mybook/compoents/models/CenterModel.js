@@ -3,28 +3,21 @@ import { Fragment, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import {
-  useUpdateIncomeMutation,
-  useCreateIncomeMutation,
-} from "@/services/incomeApi";
+import { useUpdateIncomeMutation } from "@/services/incomeApi";
 
 export default function CenterModel({
   isOpenModel,
   setIsOpenModel,
-  title,
   modeltype,
   selctEditId,
-  selectbtn,
 }) {
   const [img, setImg] = useState(null);
   const fileref = useRef(null);
   const nameref = useRef(null);
   const amountref = useRef(null);
-  const dispatch = useDispatch();
 
   // Initialize mutations
   const [updateIncome] = useUpdateIncomeMutation();
-  const [createIncome] = useCreateIncomeMutation();
 
   // Function to close modal
   function closeModal() {
@@ -39,43 +32,29 @@ export default function CenterModel({
     closeModal();
   };
 
-  // const { user } = useSelector((state) => state.auth);
-
-  // Submit function
-  const handliingSubmit = async () => {
-    if (!nameref.current.value || !amountref.current.value) {
-      toast.error("Please fill in all required fields.");
-      return;
-    }
-
-    const data = {
-      income_source: nameref.current.value,
-      amount: parseFloat(amountref.current.value),
-    };
-
+  // Function to handle form submission
+  const handleSubmit = async () => {
+    // Create a new FormData object
     const formData = new FormData();
+    formData.append("id", selctEditId);
+    formData.append("income_source", nameref.current.value);
+    formData.append("amount", amountref.current.value);
+
     if (img) {
       formData.append("img", img);
     }
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
 
     try {
-      if (modeltype === "edit") {
+      if (modeltype === "edit" && selctEditId) {
         await updateIncome({ id: selctEditId, formData }).unwrap();
-        toast.success("Income data updated successfully!");
-      } else if (modeltype === "add") {
-        await createIncome(formData).unwrap();
-        toast.success("Income data added successfully!");
-      } else if (modeltype === "singleicon") {
-        data.qly = 1;
-        dispatch(addsingleIcon(data)); // Ensure addsingleIcon is defined
-        toast.success("Single income data added successfully!");
+        toast.success("Item updated successfully!");
+      } else {
+        // Handle creation if needed
       }
-      clearfn();
+      clearfn(); // Clear the form after submission
     } catch (error) {
-      toast.error("An error occurred while processing your request.");
+      console.error("Failed to update the item:", error);
+      toast.error("Failed to update the item.");
     }
   };
 
@@ -152,7 +131,7 @@ export default function CenterModel({
                   <h6 className="mt-5">Amount:</h6>
                   <input
                     ref={amountref}
-                    onKeyDown={(e) => e.key === "Enter" && handliingSubmit()}
+                    onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                     className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
                     type="number"
                   />
@@ -164,7 +143,7 @@ export default function CenterModel({
                       Cancel
                     </button>
                     <button
-                      onClick={handliingSubmit}
+                      onClick={handleSubmit}
                       className="min-h-[50px] shadow-lightmode dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold active:shadow-lightmodeclick dark:active:shadow-buttonclick"
                     >
                       {modeltype === "edit" ? "Save" : "Add"}
