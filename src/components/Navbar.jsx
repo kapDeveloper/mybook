@@ -15,7 +15,6 @@ const Navbar = () => {
   };
   return (
     <nav className="flex gap-5">
-      {/* <Link href="/">Home</Link> */}
       <button className="font-bold" onClick={handleLogout}>
         Logout
       </button>

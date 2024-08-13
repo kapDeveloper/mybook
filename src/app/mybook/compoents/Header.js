@@ -5,7 +5,7 @@ import { FaSun } from "react-icons/fa6";
 import { usePathname, useRouter } from "next/navigation";
 import ToggleDarkMode from "@/app/(auth)/darkmode/ToggleDarkMode";
 import Navbar from "@/components/Navbar";
-
+import Link from "next/link";
 function Header() {
   const router = useRouter();
   const path = usePathname();
@@ -19,7 +19,9 @@ function Header() {
   };
   return (
     <div className="shadow-lightmode dark:shadow-customshadow px-2 z-20 bg-darkmode sm:px-28 py-4 sticky flex items-center justify-between top-0 left-0">
-      <h1 className="font-bold">MyBook</h1>
+      <h1 className="font-bold">
+        <Link href="/">MyBook</Link>
+      </h1>
 
       <div className="flex items-center gap-4">
         <button
