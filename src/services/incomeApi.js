@@ -48,9 +48,8 @@ export const incomeApi = createApi({
     // DELETE request - delete an income by ID
     deleteIncome: builder.mutation({
       query: (id) => ({
-        url: "/",
+        url: `income/${id}`,
         method: "DELETE",
-        body: { id },
       }),
     }),
   }),

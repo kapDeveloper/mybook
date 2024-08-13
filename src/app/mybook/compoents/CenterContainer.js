@@ -7,28 +7,38 @@ import TabButton from "./TabButton";
 import { useDispatch } from "react-redux";
 import { deleteIncome, deleteExpanse } from "../../store/features/counter";
 import { toast } from "react-toastify";
-
-import { useGetIncomesQuery } from "@/services/incomeApi";
+import {
+  useGetIncomesQuery,
+  useDeleteIncomeMutation,
+} from "@/services/incomeApi";
 import Image from "next/image";
 
 function CenterContainer() {
+  const [deleteIncome, { refetch }] = useDeleteIncomeMutation(); // Hook for delete
   const { data, error, isLoading } = useGetIncomesQuery();
-
-  console.log({ data });
-  if (isLoading) {
-    console.log("Loading data...");
-  }
-
-  if (error) {
-    console.error("Error fetching data:", error);
-  }
-
   const [isOpenModel, setIsOpenModel] = useState(false);
-  const [selectbtn, setselectbtn] = useState(0);
-  const dispach = useDispatch();
-
+  const [selectbtn, setSelectbtn] = useState(0);
   const [modeltype, setModeltype] = useState();
   const [selctEditId, setSelctEditId] = useState();
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteIncome(id).unwrap(); // Ensure unwrapping for error handling
+      toast.success("Deleted income item!");
+      refetch(); // Refetch data to reflect the latest state
+    } catch (err) {
+      toast.error("Failed to delete income item!");
+      console.error("Failed to delete income:", err);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (data) {
+  //     setShawdata(selectbtn === 0 ? data.income : data.expanse);
+  //   }
+  // }, [selectbtn, data]);
+
+  const rendomColor = ["red", "green", "blue", "#c3c388"];
 
   const testfn = (id) => {
     setIsOpenModel(true);
@@ -36,25 +46,9 @@ function CenterContainer() {
     setSelctEditId(id);
   };
 
-  const rendomColor = ["red", "green", "blue", "#c3c388"];
-
-  const removeItem = (id) => {
-    selectbtn == 0
-      ? (dispach(deleteIncome(id)), toast("Deleted income item!"))
-      : (dispach(deleteExpanse(id)), toast("Deleted expense item!"));
-  };
-
-  const [shawdata, setShawdata] = useState([]);
-
-  useEffect(() => {
-    if (data) {
-      setShawdata(selectbtn === 0 ? data.income : data.expanse);
-    }
-  }, [selectbtn, data]);
-
   return (
     <>
-      <TabButton selectbtn={selectbtn} setselectbtn={setselectbtn} />
+      <TabButton selectbtn={selectbtn} setselectbtn={setSelectbtn} />
       <div className="flex flex-col gap-3 mt-5 h-[500px] overflow-auto">
         {data?.map((item, index) => {
           const backgroundColor = rendomColor[index % rendomColor.length];
@@ -90,7 +84,7 @@ function CenterContainer() {
                   <p className="text-green-500">${item?.amount}</p>
                 </div>
                 <RiCloseLargeFill
-                  onClick={() => removeItem(item._id)}
+                  onClick={() => handleDelete(item._id)}
                   className="text-[26px] min-w-[20px] text-white active:scale-90"
                 />
               </div>
