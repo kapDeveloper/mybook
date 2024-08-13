@@ -2,7 +2,6 @@
 import React, { lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
-
 import { toast } from "react-toastify";
 
 const Tooltip = lazy(() => import("./Tooltip"));

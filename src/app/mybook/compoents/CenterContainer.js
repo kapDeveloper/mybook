@@ -4,6 +4,7 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import Tooltip from "./Tooltip";
 import CenterModel from "./models/CenterModel";
 import TabButton from "./TabButton";
+import { toast } from "react-toastify";
 
 import {
   useGetIncomesQuery,
@@ -39,9 +40,13 @@ function CenterContainer() {
   const handleDelete = async (postId) => {
     try {
       await deleteIncome(postId).unwrap();
+
+      toast.success("Income Deleted successfully!");
+
       refetch();
     } catch (error) {
       console.error("Failed to delete the post:", error);
+      toast.error("Failed to add income data.");
     }
   };
 

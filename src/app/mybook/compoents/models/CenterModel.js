@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useUpdateIncomeMutation } from "@/services/incomeApi";
@@ -49,7 +48,7 @@ export default function CenterModel({
         await updateIncome({ id: selctEditId, formData }).unwrap();
         toast.success("Item updated successfully!");
       } else {
-        // Handle creation if needed
+        toast.error("Failed to add income data.");
       }
       clearfn(); // Clear the form after submission
     } catch (error) {
