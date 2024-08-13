@@ -11,6 +11,10 @@ export default function CenterModel({
   modeltype,
   selctEditId,
 }) {
+  // expense
+  console.log({ selctEditId });
+  //
+
   const [img, setImg] = useState(null);
   const fileref = useRef(null);
   const nameref = useRef(null);
