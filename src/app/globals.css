@@ -1,38 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Playfair+Display:ital,wght@0,900;1,400;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&family=Playfair+Display:ital,wght@0,900;1,400;1,600;1,700;1,800;1,900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@import "~react-toastify/dist/ReactToastify.min.css";
 
-*,body {
+*,
+body {
   font-family: "Edu AU VIC WA NT Hand";
   font-weight: 400;
   font-style: normal;
   color: var(--text-color) !important;
 }
 
-
 ::-webkit-scrollbar {
   width: 1px;
 }
 
 ::-webkit-scrollbar-track {
-  box-shadow: 6px 6px 12px #120d0d,-6px -6px 12px #463535; 
+  box-shadow: 6px 6px 12px #120d0d, -6px -6px 12px #463535;
   border-radius: 10px;
 }
- 
 
 ::-webkit-scrollbar-thumb {
-  background: #463535; 
+  background: #463535;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #b30000; 
+  background: #b30000;
 }
-
 
 /* toast */
 .custom_toast > .Toastify__toast-theme--light {
@@ -41,5 +40,4 @@
 
 .custom_button {
   @apply shadow-buttonclick;
-
 }

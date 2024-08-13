@@ -1,29 +1,44 @@
 import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { addIncome, addExpanse } from "../../store/features/counter";
+import { useCreateIncomeMutation } from "@/services/incomeApi";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { useGetIncomesQuery } from "@/services/incomeApi";
+
+///
+
 function AddForm() {
   const [selectbtn, setselectbtn] = useState(0);
-  const dispatch = useDispatch();
+  const [createIncome, { refech }] = useCreateIncomeMutation();
+  const { data } = useGetIncomesQuery();
+
   const nameref = useRef(null);
   const amountref = useRef(null);
-  // fn
+  const imgRef = useRef(null); // Reference for the optional image input
 
-  const handlingAdd = () => {
-    let data = {
-      id: parseFloat(Math.random()),
-      icon: "",
-      name: nameref.current.value,
-      amount: amountref.current.value,
-      time: "",
-    };
+  const { user } = useSelector((state) => state.auth);
+  // console.log("user addform", user._id);
 
-    selectbtn == 0
-      ? (dispatch(addIncome(data)), toast("Add income data!"))
-      : (dispatch(addExpanse(data)), toast("Add expanse data!"));
+  // Function to handle form submission
+  const handlingAdd = async () => {
+    const formData = new FormData();
+    formData.append("user", user._id);
+    formData.append("income_source", nameref.current.value);
+    formData.append("amount", amountref.current.value);
 
-    nameref.current.value = "";
-    amountref.current.value = "";
+    // Append image file if exists
+    if (imgRef.current.files.length > 0) {
+      formData.append("img", imgRef.current.files[0]);
+    }
+
+    try {
+      await createIncome(formData).unwrap();
+      toast("Income data added successfully!");
+      nameref.current.value = "";
+      amountref.current.value = "";
+      imgRef.current.value = "";
+    } catch (error) {
+      toast.error("Failed to add income data.");
+    }
   };
 
   return (
@@ -31,35 +46,31 @@ function AddForm() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => setselectbtn(0)}
-          className={`min-h-[50px]  w-full rounded-lg text-white font-bold ${
-            selectbtn == 0
+          className={`min-h-[50px] w-full rounded-lg text-white font-bold ${
+            selectbtn === 0
               ? "shadow-lightmodeclick dark:shadow-buttonclick"
               : "shadow-lightmode dark:shadow-customshadow"
-          } `}
+          }`}
         >
-          income
+          Income
         </button>
         <button
           onClick={() => setselectbtn(1)}
-          className={`min-h-[50px]  w-full rounded-lg text-white font-bold ${
-            selectbtn == 1
+          className={`min-h-[50px] w-full rounded-lg text-white font-bold ${
+            selectbtn === 1
               ? "shadow-lightmodeclick dark:shadow-buttonclick"
               : "shadow-lightmode dark:shadow-customshadow"
-          } `}
+          }`}
         >
-          expense
+          Expense
         </button>
       </div>
 
-      <div className="w-full p-[24px] shadow-lightmode  dark:shadow-customshadow mt-5 rounded-lg">
-        {!selectbtn ? (
-          <h6>Income Name:</h6>
-        ) : (
-          <h6 className="">Expense Name:</h6>
-        )}
+      <div className="w-full p-[24px] shadow-lightmode dark:shadow-customshadow mt-5 rounded-lg">
+        <h6>{!selectbtn ? "Income Source:" : "Expense Source:"}</h6>
         <input
           ref={nameref}
-          onKeyDown={(e) => e.key == "Enter" && amountref.current.focus()}
+          onKeyDown={(e) => e.key === "Enter" && amountref.current.focus()}
           className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
           type="text"
         />
@@ -68,14 +79,23 @@ function AddForm() {
         <input
           ref={amountref}
           onKeyDown={(e) =>
-            e.key == "Enter" && (handlingAdd(), nameref.current.focus())
+            e.key === "Enter" && (handlingAdd(), nameref.current.focus())
           }
           className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
           type="number"
         />
+
+        {/* Optional image input */}
+        <h6 className="mt-5">Image (optional):</h6>
+        <input
+          ref={imgRef}
+          className="w-full mt-2 p-[5px_10px] rounded-md"
+          type="file"
+        />
+
         <button
-          onChange={handlingAdd}
-          className="min-h-[50px] shadow-lightmode  dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold active:shadow-lightmodeclick  dark:active:shadow-buttonclick"
+          onClick={handlingAdd}
+          className="min-h-[50px] shadow-lightmode dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold active:shadow-lightmodeclick dark:active:shadow-buttonclick"
         >
           Add
         </button>

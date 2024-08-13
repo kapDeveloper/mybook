@@ -4,58 +4,67 @@ export const incomeApi = createApi({
   reducerPath: "incomeApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api/income" }),
   endpoints: (builder) => ({
-    // GET request - fetch all incomes
     getIncomes: builder.query({
       query: () => ({
         url: "/",
         method: "GET",
       }),
+      providesTags: ["Income"],
     }),
-    // POST request - create new income
     createIncome: builder.mutation({
       query: (formData) => {
-        // Check if the image file exists
-        if (formData.imgFile) {
-          formData.append("img", formData.imgFile);
+        if (formData instanceof FormData) {
+          return {
+            url: "/",
+            method: "POST",
+            body: formData,
+          };
         }
-        // Remove imgFile from the formData object if it exists
-        delete formData.imgFile;
 
         return {
           url: "/",
           method: "POST",
-          body: formData,
+          body: JSON.stringify(formData),
+          headers: {
+            "Content-Type": "application/json",
+          },
         };
       },
+      invalidatesTags: ["Income"], // Invalidate the cache of getIncomes
     }),
-    // PUT request - update an existing income
     updateIncome: builder.mutation({
       query: ({ id, formData }) => {
-        // Check if the image file exists
-        if (formData.imgFile) {
-          formData.append("img", formData.imgFile);
+        if (formData.img) {
+          formData.append("img", formData.img);
         }
-        // Remove imgFile from the formData object if it exists
-        delete formData.imgFile;
+        delete formData.img;
 
         return {
-          url: "/",
+          url: `/${id}`,
           method: "PUT",
-          body: formData,
+          body:
+            formData instanceof FormData ? formData : JSON.stringify(formData),
+          headers:
+            formData instanceof FormData
+              ? {}
+              : { "Content-Type": "multipart/form-data" },
         };
       },
+      invalidatesTags: ["Income"], // Invalidate the cache of getIncomes
     }),
-    // DELETE request - delete an income by ID
     deleteIncome: builder.mutation({
       query: (id) => ({
-        url: `income/${id}`,
+        url: `${id}`,
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }),
+      invalidatesTags: ["Income"], // Invalidate the cache of getIncomes
     }),
   }),
 });
 
-// Export hooks for usage in functional components
 export const {
   useGetIncomesQuery,
   useCreateIncomeMutation,

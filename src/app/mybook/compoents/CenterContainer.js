@@ -4,9 +4,7 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import Tooltip from "./Tooltip";
 import CenterModel from "./models/CenterModel";
 import TabButton from "./TabButton";
-import { useDispatch } from "react-redux";
-import { deleteIncome, deleteExpanse } from "../../store/features/counter";
-import { toast } from "react-toastify";
+
 import {
   useGetIncomesQuery,
   useDeleteIncomeMutation,
@@ -14,29 +12,12 @@ import {
 import Image from "next/image";
 
 function CenterContainer() {
-  const [deleteIncome, { refetch }] = useDeleteIncomeMutation(); // Hook for delete
   const { data, error, isLoading } = useGetIncomesQuery();
+
   const [isOpenModel, setIsOpenModel] = useState(false);
   const [selectbtn, setSelectbtn] = useState(0);
   const [modeltype, setModeltype] = useState();
   const [selctEditId, setSelctEditId] = useState();
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteIncome(id).unwrap(); // Ensure unwrapping for error handling
-      toast.success("Deleted income item!");
-      refetch(); // Refetch data to reflect the latest state
-    } catch (err) {
-      toast.error("Failed to delete income item!");
-      console.error("Failed to delete income:", err);
-    }
-  };
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setShawdata(selectbtn === 0 ? data.income : data.expanse);
-  //   }
-  // }, [selectbtn, data]);
 
   const rendomColor = ["red", "green", "blue", "#c3c388"];
 
@@ -45,6 +26,14 @@ function CenterContainer() {
     setModeltype("edit");
     setSelctEditId(id);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching data: {error.message}</div>;
+  }
 
   return (
     <>
@@ -68,6 +57,8 @@ function CenterContainer() {
                       style={{ backgroundColor }}
                       className="w-12 p-0 h-12 rounded-full"
                       alt=""
+                      width={10}
+                      height={10}
                     />
                   ) : (
                     <p
