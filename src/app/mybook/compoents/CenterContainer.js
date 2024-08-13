@@ -14,6 +14,7 @@ import Image from "next/image";
 function CenterContainer() {
   const { data, error, isLoading } = useGetIncomesQuery();
 
+  const [deleteIncome, refetch] = useDeleteIncomeMutation();
   const [isOpenModel, setIsOpenModel] = useState(false);
   const [selectbtn, setSelectbtn] = useState(0);
   const [modeltype, setModeltype] = useState();
@@ -34,6 +35,16 @@ function CenterContainer() {
   if (error) {
     return <div>Error fetching data: {error.message}</div>;
   }
+
+  const handleDelete = async (postId) => {
+    console.log(postId);
+    try {
+      await deleteIncome(postId).unwrap();
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete the post:", error);
+    }
+  };
 
   return (
     <>

@@ -8,7 +8,7 @@ import { useGetIncomesQuery } from "@/services/incomeApi";
 
 function AddForm() {
   const [selectbtn, setselectbtn] = useState(0);
-  const [createIncome, { refech }] = useCreateIncomeMutation();
+  const [createIncome] = useCreateIncomeMutation();
   const { data } = useGetIncomesQuery();
 
   const nameref = useRef(null);
