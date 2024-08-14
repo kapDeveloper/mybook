@@ -4,14 +4,19 @@ import { useGetExpensesQuery } from "@/services/expenseApi";
 
 function TotalComponents() {
   const [incomeTotal, setIncomeTotal] = useState(0);
-  const [expenseTotal, setExpenseTotal] = useState(0);
+  const [expenseTotal, setExpenseTotal] = useState(0); // This will be 0 if no expense data available
 
   const { data, isLoading, error } = useGetIncomesQuery();
 
   const { data: expense } = useGetExpensesQuery();
 
+  const result = data?.map((a) => a.amount);
+  console.log("result", result);
+
+  // Calculate totals whenever the data changes
   useEffect(() => {
     if (data) {
+      // Summing up income amounts (assuming all data are incomes as no expense data is provided)
       const totalIncome = data.reduce(
         (acc, item) => acc + parseFloat(item.amount) || 0,
         0
@@ -22,11 +27,12 @@ function TotalComponents() {
 
   useEffect(() => {
     if (expense) {
-      const expenseTotal = expense.reduce(
+      // Summing up income amounts (assuming all data are incomes as no expense data is provided)
+      const totalExpense = expense.reduce(
         (acc, item) => acc - parseFloat(item.amount) || 0,
         0
       );
-      setExpenseTotal(expenseTotal);
+      setExpenseTotal(totalExpense);
     }
   }, [expense]);
 

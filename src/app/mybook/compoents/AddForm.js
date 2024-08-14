@@ -1,5 +1,9 @@
+"use client";
 import React, { useRef, useState } from "react";
-import { useCreateIncomeMutation } from "@/services/incomeApi";
+import {
+  useCreateIncomeMutation,
+  useGetIncomesQuery,
+} from "@/services/incomeApi";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useCreateExpenseMutation } from "@/services/expenseApi";
@@ -7,9 +11,17 @@ import { useCreateExpenseMutation } from "@/services/expenseApi";
 ///
 
 function AddForm() {
-  const [selectbtn, setselectbtn] = useState(0);
-  const [createIncome] = useCreateIncomeMutation();
+  //
 
+  const [selectbtn, setselectbtn] = useState(0);
+
+  const { data } = useGetIncomesQuery();
+  console.log("IncomeDetails", data);
+
+  const result = data?.map((a) => a.amount);
+  console.log("result", result);
+
+  const [createIncome, { refetch }] = useCreateIncomeMutation();
   const [createExpense] = useCreateExpenseMutation();
 
   const nameref = useRef(null);
@@ -36,6 +48,7 @@ function AddForm() {
       nameref.current.value = "";
       amountref.current.value = "";
       imgRef.current.value = "";
+      refetch();
     } catch (error) {
       toast.error("Failed to add income data.");
     }
@@ -52,14 +65,16 @@ function AddForm() {
       formData.append("img", imgRef.current.files[0]);
     }
 
-    try {
-      await createExpense(formData).unwrap();
-      toast("Expense data added successfully!");
-      nameref.current.value = "";
-      amountref.current.value = "";
-      imgRef.current.value = "";
-    } catch (error) {
-      toast.error("Failed to add expense data.");
+    if (!(result.length === 0)) {
+      try {
+        await createExpense(formData).unwrap();
+        toast("Expense data added successfully!");
+        nameref.current.value = "";
+        amountref.current.value = "";
+        imgRef.current.value = "";
+      } catch (error) {
+        toast.error("Failed to add expense data.");
+      }
     }
   };
 
