@@ -4,6 +4,7 @@ function Tooltip({ children, text, fn, rt, tp }) {
   return (
     <div className="relative group">
       {children}
+
       <div
         onClick={() => fn()}
         className={`w-[100px] hidden group-hover:block z-50 absolute ${

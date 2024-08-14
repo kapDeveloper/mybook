@@ -31,12 +31,14 @@ function CenterContainer() {
   const [modeltype, setModeltype] = useState();
   const [selctEditId, setSelctEditId] = useState();
 
+  const [selectedItem, setSelectedItem] = useState([]);
   const rendomColor = ["red", "green", "blue", "#c3c388"];
 
-  const testfn = (id) => {
+  const testfn = (id, item) => {
     setIsOpenModel(true);
     setModeltype("edit");
     setSelctEditId(id);
+    setSelectedItem(item);
   };
 
   if (isLoading) {
@@ -78,11 +80,12 @@ function CenterContainer() {
         <div className="flex flex-col gap-3 mt-5 h-[500px] overflow-auto">
           {data?.map((item, index) => {
             const backgroundColor = rendomColor[index % rendomColor.length];
+
             return (
               <Tooltip
                 text={"Edit"}
                 rt={true}
-                fn={() => testfn(item._id)}
+                fn={() => testfn(item._id, item)}
                 tp={"-10px"}
                 key={item._id}
               >
@@ -128,7 +131,7 @@ function CenterContainer() {
               <Tooltip
                 text={"Edit"}
                 rt={true}
-                fn={() => testfn(item._id)}
+                fn={() => testfn(item._id, item)}
                 tp={"-10px"}
                 key={item._id}
               >
@@ -174,6 +177,7 @@ function CenterContainer() {
         modeltype={modeltype}
         selctEditId={selctEditId}
         selectbtn={selectbtn}
+        selectedItem={selectedItem}
       />
     </>
   );

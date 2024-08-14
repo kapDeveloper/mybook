@@ -11,8 +11,10 @@ export default function CenterModel({
   modeltype,
   selctEditId,
   selectbtn,
+  selectedItem,
 }) {
   // expense
+  console.log("selectbtn", selectedItem.amount);
 
   //
 
@@ -133,11 +135,7 @@ export default function CenterModel({
                     <Image
                       onClick={() => fileref.current.click()}
                       className="w-full h-full rounded-full"
-                      src={
-                        img
-                          ? URL.createObjectURL(img)
-                          : "/assets/images/shirt.png"
-                      }
+                      src={img ? URL.createObjectURL(img) : selectedItem.img}
                       alt="Uploaded image"
                       width={96}
                       height={96}
@@ -153,6 +151,9 @@ export default function CenterModel({
                 <div className="w-full p-[24px] shadow-lightmode dark:shadow-customshadow mt-5 rounded-lg">
                   <h6>Item Name:</h6>
                   <input
+                    value={
+                      selectedItem.income_source || selectedItem.expense_source
+                    }
                     ref={nameref}
                     onKeyDown={(e) =>
                       e.key === "Enter" && amountref.current.focus()
@@ -163,6 +164,7 @@ export default function CenterModel({
 
                   <h6 className="mt-5">Amount:</h6>
                   <input
+                    value={selectedItem.amount}
                     ref={amountref}
                     onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                     className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
