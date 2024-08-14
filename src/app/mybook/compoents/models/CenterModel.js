@@ -13,7 +13,7 @@ export default function CenterModel({
   selectbtn,
 }) {
   // expense
-  console.log({ selectbtn });
+
   //
 
   const [img, setImg] = useState(null);
@@ -42,27 +42,52 @@ export default function CenterModel({
 
   // Function to handle form submission
   const handleSubmit = async () => {
-    // Create a new FormData object
-    const formData = new FormData();
-    formData.append("id", selctEditId);
-    formData.append("income_source", nameref.current.value);
-    formData.append("amount", amountref.current.value);
+    if (selectbtn === 0) {
+      // Create a new FormData object
+      const formData = new FormData();
+      formData.append("id", selctEditId);
+      formData.append("income_source", nameref.current.value);
+      formData.append("amount", amountref.current.value);
 
-    if (img) {
-      formData.append("img", img);
-    }
-
-    try {
-      if (modeltype === "edit" && selctEditId) {
-        await updateIncome({ id: selctEditId, formData }).unwrap();
-        toast.success("Item updated successfully!");
-      } else {
-        toast.error("Failed to update income data.");
+      if (img) {
+        formData.append("img", img);
       }
-      clearfn(); // Clear the form after submission
-    } catch (error) {
-      console.error("Failed to update the item:", error);
-      toast.error("Failed to update the item.");
+
+      try {
+        if (modeltype === "edit" && selctEditId) {
+          await updateIncome({ id: selctEditId, formData }).unwrap();
+          toast.success("Item updated successfully!");
+        } else {
+          toast.error("Failed to update income data.");
+        }
+        clearfn(); // Clear the form after submission
+      } catch (error) {
+        console.error("Failed to update the item:", error);
+        toast.error("Failed to update the item.");
+      }
+    } else if (selectbtn === 1) {
+      // Create a new FormData object
+      const formData = new FormData();
+      formData.append("id", selctEditId);
+      formData.append("expense_source", nameref.current.value);
+      formData.append("amount", amountref.current.value);
+
+      if (img) {
+        formData.append("img", img);
+      }
+
+      try {
+        if (modeltype === "edit" && selctEditId) {
+          await updateExpense({ id: selctEditId, formData }).unwrap();
+          toast.success("Expense updated successfully!");
+        } else {
+          toast.error("Failed to update expense data.");
+        }
+        clearfn(); // Clear the form after submission
+      } catch (error) {
+        console.error("Failed to update the expense:", error);
+        // toast.error("Failed to update the expense.");
+      }
     }
   };
 
