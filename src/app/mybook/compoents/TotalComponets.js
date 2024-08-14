@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { useGetIncomesQuery } from "@/services/incomeApi";
 import { useGetExpensesQuery } from "@/services/expenseApi";
@@ -8,10 +9,9 @@ function TotalComponents() {
 
   const { data, isLoading, error } = useGetIncomesQuery();
 
-  const { data: expense } = useGetExpensesQuery();
+  const { data: expense, refetch } = useGetExpensesQuery();
 
   const result = data?.map((a) => a.amount);
-  console.log("result", result);
 
   // Calculate totals whenever the data changes
   useEffect(() => {
@@ -23,7 +23,7 @@ function TotalComponents() {
       );
       setIncomeTotal(totalIncome);
     }
-  }, [data]);
+  }, [data, expense]);
 
   useEffect(() => {
     if (expense) {
@@ -34,7 +34,14 @@ function TotalComponents() {
       );
       setExpenseTotal(totalExpense);
     }
-  }, [expense]);
+  }, [data, expense]);
+
+  useEffect(() => {
+    if (result?.length === 0) {
+      setExpenseTotal(0);
+      refetch();
+    }
+  }, [data, expense]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching data!</p>;

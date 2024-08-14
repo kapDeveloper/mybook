@@ -10,9 +10,10 @@ export default function CenterModel({
   setIsOpenModel,
   modeltype,
   selctEditId,
+  selectbtn,
 }) {
   // expense
-  console.log({ selctEditId });
+  console.log({ selectbtn });
   //
 
   const [img, setImg] = useState(null);

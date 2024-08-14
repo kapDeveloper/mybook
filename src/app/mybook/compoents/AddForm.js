@@ -50,7 +50,7 @@ function AddForm() {
       imgRef.current.value = "";
       refetch();
     } catch (error) {
-      toast.error("Failed to add income data.");
+      // toast.error("Failed to add income data.");
     }
   };
 
@@ -73,7 +73,7 @@ function AddForm() {
         amountref.current.value = "";
         imgRef.current.value = "";
       } catch (error) {
-        toast.error("Failed to add expense data.");
+        // toast.error("Failed to add expense data.");
       }
     }
   };
