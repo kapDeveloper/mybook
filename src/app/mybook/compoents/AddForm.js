@@ -66,14 +66,20 @@ function AddForm() {
     }
 
     if (!(result.length === 0)) {
-      try {
-        await createExpense(formData).unwrap();
-        toast("Expense data added successfully!");
-        nameref.current.value = "";
-        amountref.current.value = "";
-        imgRef.current.value = "";
-      } catch (error) {
-        // toast.error("Failed to add expense data.");
+      if (amountref.current.value <= result) {
+        try {
+          await createExpense(formData).unwrap();
+          toast("Expense data added successfully!");
+          nameref.current.value = "";
+          amountref.current.value = "";
+          imgRef.current.value = "";
+        } catch (error) {
+          // toast.error("Failed to add expense data.");
+        }
+      } else {
+        toast.warning(
+          "Expense amount cannot be greater than the available result."
+        );
       }
     } else {
       toast.warning("You Can't Add Expense Without Income");
