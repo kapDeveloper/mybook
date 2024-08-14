@@ -75,6 +75,8 @@ function AddForm() {
       } catch (error) {
         // toast.error("Failed to add expense data.");
       }
+    } else {
+      toast.warning("You Can't Add Expense Without Income");
     }
   };
 
