@@ -66,7 +66,7 @@ function AddForm() {
     }
 
     if (!(result.length === 0)) {
-      if (amountref.current.value <= result) {
+      if (amountref?.current?.value <= result) {
         try {
           await createExpense(formData).unwrap();
           toast("Expense data added successfully!");
