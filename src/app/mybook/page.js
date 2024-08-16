@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const TotalComponets = lazy(() => import("./compoents/TotalComponets"));
 const AddForm = lazy(() => import("./compoents/AddForm"));
-const AddIconFrom = lazy(() => import("./compoents/AddIconFrom"));
+const AddIconFrom = lazy(() => import("./compoents/AddIconFrom.jsx"));
 const CenterContainer = lazy(() => import("./compoents/CenterContainer"));
 
 function page() {
