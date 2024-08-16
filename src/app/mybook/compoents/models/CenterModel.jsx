@@ -1,9 +1,16 @@
 "use client";
-import { useUpdateExpenseMutation } from "@/services/expenseApi";
-import { useUpdateIncomeMutation } from "@/services/incomeApi";
+import {
+  useCreateExpenseMutation,
+  useUpdateExpenseMutation,
+} from "@/services/expenseApi";
+import {
+  useCreateIncomeMutation,
+  useUpdateIncomeMutation,
+} from "@/services/incomeApi";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function CenterModel({
@@ -13,7 +20,11 @@ export default function CenterModel({
   selctEditId,
   selectbtn,
   selectedItem,
+  addIconFormFlag,
 }) {
+  // console.log("addIconFormFlag", addIconFormFlag);
+  const { user } = useSelector((state) => state.auth);
+
   const fileref = useRef(null);
 
   const [formState, setFormState] = useState({
@@ -22,6 +33,11 @@ export default function CenterModel({
     img: null,
   });
 
+  // create addiconform
+  const [createIncome] = useCreateIncomeMutation();
+  const [createExpense] = useCreateExpenseMutation();
+
+  // update
   const [updateExpense] = useUpdateExpenseMutation();
   const [updateIncome] = useUpdateIncomeMutation();
 
@@ -95,8 +111,42 @@ export default function CenterModel({
       }
       clearfn();
     } catch (error) {
-      console.error("Failed to update the item:", error);
-      toast.error("Failed to update the item.");
+      console.error("Failed to Update the item:", error);
+      toast.error("Failed to Update the item.");
+    }
+  };
+
+  const handleSubmitAddIcon = async () => {
+    const formData = new FormData();
+    formData.append("user", user._id);
+    formData.append(
+      selectbtn === 0 ? "income_source" : "expense_source",
+      formState.source
+    );
+    formData.append("amount", formState.amount);
+
+    if (formState.img) {
+      formData.append("img", formState.img);
+    }
+
+    try {
+      if (addIconFormFlag === true) {
+        if (selectbtn === 0) {
+          await createIncome(formData).unwrap();
+          toast.success("Income Created successfully!");
+        } else {
+          await createExpense(formData).unwrap();
+          toast.success("Expense Created successfully!");
+        }
+      } else {
+        toast.error(
+          `Failed to Created ${selectbtn === 0 ? "income" : "expense"} data.`
+        );
+      }
+      clearfn();
+    } catch (error) {
+      console.error("Failed to Creating the item:", error);
+      toast.error("Failed to Creating the item.");
     }
   };
 
@@ -188,7 +238,7 @@ export default function CenterModel({
                       Cancel
                     </button>
                     <button
-                      onClick={handleSubmit}
+                      onClick={handleSubmitAddIcon}
                       className="min-h-[50px] shadow-lightmode dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold active:shadow-lightmodeclick dark:active:shadow-buttonclick"
                     >
                       {modeltype === "edit" ? "Save" : "Add"}
