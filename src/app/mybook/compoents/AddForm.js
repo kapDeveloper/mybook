@@ -65,24 +65,29 @@ function AddForm() {
       formData.append("img", imgRef.current.files[0]);
     }
 
-    if (!(result.length === 0)) {
-      if (amountref?.current?.value <= result) {
+    if (result.length > 0) {
+      const availableBalance = result; // Assuming `result` contains the available balance.
+      const expenseAmount = parseFloat(amountref?.current?.value);
+
+      if (expenseAmount <= availableBalance) {
         try {
           await createExpense(formData).unwrap();
-          toast("Expense data added successfully!");
+          toast.success("Expense data added successfully!");
+
+          // Clear the form fields
           nameref.current.value = "";
           amountref.current.value = "";
           imgRef.current.value = "";
         } catch (error) {
-          // toast.error("Failed to add expense data.");
+          toast.error("Failed to add expense data.");
         }
       } else {
         toast.warning(
-          "Expense amount cannot be greater than the available result."
+          "Expense amount cannot be greater than the available balance."
         );
       }
     } else {
-      toast.warning("You Can't Add Expense Without Income");
+      toast.warning("You can't add an expense without income.");
     }
   };
 

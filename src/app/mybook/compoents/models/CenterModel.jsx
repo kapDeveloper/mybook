@@ -1,10 +1,11 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import Image from "next/image";
-import { useUpdateIncomeMutation } from "@/services/incomeApi";
-
+"use client";
 import { useUpdateExpenseMutation } from "@/services/expenseApi";
+import { useUpdateIncomeMutation } from "@/services/incomeApi";
+import { Dialog, Transition } from "@headlessui/react";
+import Image from "next/image";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
+
 export default function CenterModel({
   isOpenModel,
   setIsOpenModel,
@@ -13,83 +14,89 @@ export default function CenterModel({
   selectbtn,
   selectedItem,
 }) {
-  // expense
-  console.log("selectbtn", selectedItem.amount);
-
-  //
-
-  const [img, setImg] = useState(null);
   const fileref = useRef(null);
-  const nameref = useRef(null);
-  const amountref = useRef(null);
 
-  //
+  const [formState, setFormState] = useState({
+    source: "",
+    amount: "",
+    img: null,
+  });
+
   const [updateExpense] = useUpdateExpenseMutation();
-
-  // Initialize mutations
   const [updateIncome] = useUpdateIncomeMutation();
 
-  // Function to close modal
+  useEffect(() => {
+    if (isOpenModel && selectedItem) {
+      setFormState({
+        source:
+          selectbtn === 0
+            ? selectedItem.income_source || ""
+            : selectedItem.expense_source || "",
+        amount: selectedItem.amount || "",
+        img: selectedItem.img || null,
+      });
+    }
+  }, [isOpenModel, selectedItem, selectbtn]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      img: e.target.files[0],
+    }));
+  };
+
   function closeModal() {
     setIsOpenModel(false);
   }
 
-  // Clear form function
   const clearfn = () => {
-    nameref.current.value = "";
-    amountref.current.value = "";
-    setImg(null);
+    setFormState({
+      source: "",
+      amount: "",
+      img: null,
+    });
     closeModal();
   };
 
-  // Function to handle form submission
   const handleSubmit = async () => {
-    if (selectbtn === 0) {
-      // Create a new FormData object
-      const formData = new FormData();
-      formData.append("id", selctEditId);
-      formData.append("income_source", nameref.current.value);
-      formData.append("amount", amountref.current.value);
+    const formData = new FormData();
+    formData.append("id", selctEditId);
+    formData.append(
+      selectbtn === 0 ? "income_source" : "expense_source",
+      formState.source
+    );
+    formData.append("amount", formState.amount);
 
-      if (img) {
-        formData.append("img", img);
-      }
+    if (formState.img) {
+      formData.append("img", formState.img);
+    }
 
-      try {
-        if (modeltype === "edit" && selctEditId) {
+    try {
+      if (modeltype === "edit" && selctEditId) {
+        if (selectbtn === 0) {
           await updateIncome({ id: selctEditId, formData }).unwrap();
-          toast.success("Item updated successfully!");
+          toast.success("Income updated successfully!");
         } else {
-          toast.error("Failed to update income data.");
-        }
-        clearfn(); // Clear the form after submission
-      } catch (error) {
-        console.error("Failed to update the item:", error);
-        toast.error("Failed to update the item.");
-      }
-    } else if (selectbtn === 1) {
-      // Create a new FormData object
-      const formData = new FormData();
-      formData.append("id", selctEditId);
-      formData.append("expense_source", nameref.current.value);
-      formData.append("amount", amountref.current.value);
-
-      if (img) {
-        formData.append("img", img);
-      }
-
-      try {
-        if (modeltype === "edit" && selctEditId) {
           await updateExpense({ id: selctEditId, formData }).unwrap();
           toast.success("Expense updated successfully!");
-        } else {
-          toast.error("Failed to update expense data.");
         }
-        clearfn(); // Clear the form after submission
-      } catch (error) {
-        console.error("Failed to update the expense:", error);
-        // toast.error("Failed to update the expense.");
+      } else {
+        toast.error(
+          `Failed to update ${selectbtn === 0 ? "income" : "expense"} data.`
+        );
       }
+      clearfn();
+    } catch (error) {
+      console.error("Failed to update the item:", error);
+      toast.error("Failed to update the item.");
     }
   };
 
@@ -135,13 +142,17 @@ export default function CenterModel({
                     <Image
                       onClick={() => fileref.current.click()}
                       className="w-full h-full rounded-full"
-                      src={img ? URL.createObjectURL(img) : selectedItem.img}
+                      src={
+                        formState.img
+                          ? URL.createObjectURL(formState.img)
+                          : selectedItem?.img
+                      }
                       alt="Uploaded image"
                       width={96}
                       height={96}
                     />
                     <input
-                      onChange={(e) => setImg(e.target.files[0])}
+                      onChange={handleFileChange}
                       type="file"
                       className="hidden"
                       ref={fileref}
@@ -149,20 +160,22 @@ export default function CenterModel({
                   </div>
                 </div>
                 <div className="w-full p-[24px] shadow-lightmode dark:shadow-customshadow mt-5 rounded-lg">
-                  <h6>Item Name:</h6>
+                  <h6>
+                    {selectbtn === 0 ? "Income Source:" : "Expense Source:"}
+                  </h6>
                   <input
-                    ref={nameref}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && amountref.current.focus()
-                    }
+                    name="source"
+                    value={formState.source}
+                    onChange={handleInputChange}
                     className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
                     type="text"
                   />
 
                   <h6 className="mt-5">Amount:</h6>
                   <input
-                    ref={amountref}
-                    onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                    name="amount"
+                    value={formState.amount}
+                    onChange={handleInputChange}
                     className="w-full mt-2 focus:outline-none bg-transparent shadow-lightmodeclick dark:shadow-buttonclick p-[5px_10px] rounded-md"
                     type="number"
                   />
