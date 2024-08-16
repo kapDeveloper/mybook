@@ -16,6 +16,16 @@ function IconCounter() {
     }
   }, [singleIconData]);
 
+  // useEffect(() => {
+  //   if (singleIconData) {
+  //     const total = singleIconData.reduce(
+  //       (acc, item) => acc + parseFloat(item.amount) * item.quantity,
+  //       0
+  //     );
+  //     setTotalAmount(total);
+  //   }
+  // }, [singleIconData]);
+
   return (
     <div className="bg-[#ead6d6] dark:bg-[#3f2727]  w-full flex flex-col justify-center">
       <h1 className="text-center text-3xl">Totls Amount :- ${incomeTotal}</h1>

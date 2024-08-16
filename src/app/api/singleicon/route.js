@@ -59,36 +59,66 @@ export async function POST(request) {
 }
 
 // PUT request handler
+// export async function PUT(request) {
+//   const formData = await request.formData();
+//   const id = formData.get("id");
+//   const income_source = formData.get("income_source");
+//   const amount = formData.get("amount");
+//   const imgFile = formData.get("img");
+
+//   try {
+//     const updatedSingleIconData = { income_source, amount };
+
+//     if (imgFile) {
+//       // Save file to disk
+//       const filePath = path.join(uploadDir, imgFile.name);
+//       await fs.promises.writeFile(
+//         filePath,
+//         Buffer.from(await imgFile.arrayBuffer())
+//       );
+
+//       // Upload image to Cloudinary
+//       const result = await cloudinary.v2.uploader.upload(filePath);
+//       await fs.promises.unlink(filePath); // Remove file from disk after upload
+
+//       updatedSingleIconData.img = result.secure_url;
+//     }
+
+//     const updatedSingleIncome = await SingleIcon.findByIdAndUpdate(
+//       id,
+//       updatedSingleIncome,
+//       { new: true }
+//     );
+//     return NextResponse.json(updatedSingleIncome);
+//   } catch (error) {
+//     console.error("Error updating SingleIncome:", error);
+//     return NextResponse.json(
+//       { error: "Error updating SingleIncome" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
 export async function PUT(request) {
   const formData = await request.formData();
   const id = formData.get("id");
-  const income_source = formData.get("income_source");
-  const amount = formData.get("amount");
-  const imgFile = formData.get("img");
 
   try {
-    const updatedSingleIconData = { income_source, amount };
+    // Step 1: Multiply the amount by 2
+    const document = await SingleIcon.findById(id);
+    const currentAmount = document.amount;
+    const updatedAmount = currentAmount * 2;
 
-    if (imgFile) {
-      // Save file to disk
-      const filePath = path.join(uploadDir, imgFile.name);
-      await fs.promises.writeFile(
-        filePath,
-        Buffer.from(await imgFile.arrayBuffer())
-      );
+    // Step 2: Decrement the updated amount by its own value
+    const finalAmount = updatedAmount - currentAmount * 2;
 
-      // Upload image to Cloudinary
-      const result = await cloudinary.v2.uploader.upload(filePath);
-      await fs.promises.unlink(filePath); // Remove file from disk after upload
-
-      updatedSingleIconData.img = result.secure_url;
-    }
-
+    // Update the amount field in the database
     const updatedSingleIncome = await SingleIcon.findByIdAndUpdate(
       id,
-      updatedSingleIncome,
+      { amount: finalAmount },
       { new: true }
     );
+
     return NextResponse.json(updatedSingleIncome);
   } catch (error) {
     console.error("Error updating SingleIncome:", error);

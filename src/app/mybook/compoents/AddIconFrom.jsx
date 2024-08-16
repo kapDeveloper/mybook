@@ -5,10 +5,12 @@ import { toast } from "react-toastify";
 import {
   useGetExpensesQuery,
   useDeleteExpenseMutation,
+  useCreateExpenseMutation,
 } from "@/services/expenseApi";
 import {
   useGetIncomesQuery,
   useDeleteIncomeMutation,
+  useCreateIncomeMutation,
 } from "@/services/incomeApi";
 const Tooltip = lazy(() => import("./Tooltip"));
 const CenterModel = lazy(() => import("./models/CenterModel"));
@@ -20,6 +22,9 @@ function AddIconFrom() {
   const [deleteExpense] = useDeleteExpenseMutation();
 
   // income
+
+  const [createIncome] = useCreateIncomeMutation();
+
   const { data: income, error, isLoading } = useGetIncomesQuery();
   const [deleteIncome] = useDeleteIncomeMutation();
 
@@ -36,6 +41,22 @@ function AddIconFrom() {
     selectbtn == 0
       ? (deleteIncome(id).unwrap(), toast(" income icon data deleted!"))
       : (deleteExpense(id).unwrap(), toast("expense icon data deleted!"));
+  };
+
+  const handlingadditem = async (item) => {
+    console.log("ITEM", item);
+
+    try {
+      await createIncome({
+        user: item.user,
+        income_source: item.income_source,
+        amount: item.amount,
+        img: item.img,
+      }).unwrap();
+      toast.success("Add successfully");
+    } catch (error) {
+      console.log("while add Error", error);
+    }
   };
 
   return (

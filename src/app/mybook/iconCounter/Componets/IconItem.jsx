@@ -1,4 +1,6 @@
 "use client";
+
+debugger;
 import React, { useState } from "react";
 import Tooltip from "../../compoents/Tooltip";
 import CenterModel from "../../compoents/models/CenterModel";

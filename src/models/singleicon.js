@@ -5,7 +5,7 @@ const SingleIconSchema = new mongoose.Schema({
   income_source: { type: String, required: true },
   amount: { type: Number, required: true },
   img: String, // Optional image field
-  quantity: { type: Number, default: 0 },
+  quantity: { type: Number, default: 1 },
 });
 
 const SingleIcon =
