@@ -45,14 +45,14 @@ function AddIconFrom() {
 
   const handlingadditem = async (item) => {
     console.log("ITEM", item);
+    const formData = new FormData();
+    formData.append("user", item.user);
+    formData.append("income_source", item.income_source);
+    formData.append("amount", item.amount);
+    formData.append("img", item.img);
 
     try {
-      await createIncome({
-        user: item.user,
-        income_source: item.income_source,
-        amount: item.amount,
-        img: item.img,
-      }).unwrap();
+      await createIncome(formData).unwrap();
       toast.success("Add successfully");
     } catch (error) {
       console.log("while add Error", error);
