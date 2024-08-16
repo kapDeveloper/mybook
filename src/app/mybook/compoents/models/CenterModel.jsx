@@ -143,7 +143,7 @@ export default function CenterModel({
                       onClick={() => fileref.current.click()}
                       className="w-full h-full rounded-full"
                       src={
-                        formState.img
+                        formState.img instanceof File
                           ? URL.createObjectURL(formState.img)
                           : selectedItem?.img
                       }
@@ -151,6 +151,7 @@ export default function CenterModel({
                       width={96}
                       height={96}
                     />
+
                     <input
                       onChange={handleFileChange}
                       type="file"

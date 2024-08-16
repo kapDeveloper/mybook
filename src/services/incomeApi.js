@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const incomeApi = createApi({
   reducerPath: "incomeApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api/income" }),
+  tagTypes: ["Income"],
   endpoints: (builder) => ({
     getIncomes: builder.query({
       query: () => ({
