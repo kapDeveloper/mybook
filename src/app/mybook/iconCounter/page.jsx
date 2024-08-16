@@ -1,20 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import IconItem from "./Componets/IconItem";
-import { useSelector } from "react-redux";
-
+import { useGetSingleIconsQuery } from "@/services/singleIconApi";
 function IconCounter() {
   const [incomeTotal, setTotalAmount] = useState(0);
+  const { data: singleIconData } = useGetSingleIconsQuery();
 
-  //   const singledata = useSelector((state) => state.items.singalIcon);
-
-  //   useEffect(() => {
-  //     const total = singledata.reduce(
-  //       (acc, item) => acc + item.amount * item.qly,
-  //       0
-  //     );
-  //     setTotalAmount(total);
-  //   }, [singledata]);
+  useEffect(() => {
+    if (singleIconData) {
+      const total = singleIconData.reduce(
+        (acc, item) => acc + parseFloat(item.amount) || 0,
+        0
+      );
+      setTotalAmount(total);
+    }
+  }, [singleIconData]);
 
   return (
     <div className="bg-[#ead6d6] dark:bg-[#3f2727]  w-full flex flex-col justify-center">

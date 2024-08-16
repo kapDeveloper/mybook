@@ -36,7 +36,6 @@ function AddIconFrom() {
     selectbtn == 0
       ? (deleteIncome(id).unwrap(), toast(" income icon data deleted!"))
       : (deleteExpense(id).unwrap(), toast("expense icon data deleted!"));
-    console.log("okok", id);
   };
 
   return (
