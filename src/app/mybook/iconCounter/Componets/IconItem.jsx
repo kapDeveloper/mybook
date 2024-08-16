@@ -5,15 +5,26 @@ import CenterModel from "../../compoents/models/CenterModel";
 
 import { toast } from "react-toastify";
 import Image from "next/image";
+
+import {
+  useGetSingleIconsQuery,
+  useDeleteSingleIconMutation,
+} from "@/services/singleIconApi";
 function IconItem() {
+  const { data: singleIconData } = useGetSingleIconsQuery();
+
+  console.log("singleIconData", singleIconData);
+
+  const [deleteSingleIcon] = useDeleteSingleIconMutation();
+
   const [isOpenModel, setIsOpenModel] = useState(false);
 
   let [modeltype, setModeltype] = useState();
 
   const testfn = (id) => {
     setModeltype("remove"),
-      dispatch(deletesingleIcon(id)),
-      toast("delect income data!");
+      deleteSingleIcon(id).unwrap(),
+      toast("delect singleicon data!");
   };
   const addnew = () => {
     setIsOpenModel(true);
@@ -30,34 +41,36 @@ function IconItem() {
           >
             +
           </div>
-          {/* {data.map((item) => {
+          {singleIconData?.map((item) => {
             return (
               <>
-                <Tooltip text={"remove"} tp={"0px"} fn={() => testfn(item.id)}>
+                <Tooltip text={"remove"} tp={"0px"} fn={() => testfn(item._id)}>
                   <div>
                     <div className="w-24  text-3xl hover:bg-gray-200 dark:hover:bg-[#91565663] rounded-full  h-24 border-dashed border-2 p-2">
                       <Image
                         className="w-full h-full  rounded-full"
-                        src={item.icon ? item.icon : "/assets/images/shirt.png"}
+                        src={item.img ? item.img : "/assets/images/shirt.png"}
                         alt=""
+                        width={96}
+                        height={96}
                       />
                       <span className="absolute right-0 text-[12px] w-8 h-8 text-center bg-gray-200 dark:bg-[#915656] shadow-lightmode dark:shadow-customshadow rounded-full -top-4">
-                        {item.qly}
+                        {item.quantity}
                       </span>
                     </div>
                     <p className="pl-3 text-sm text-center max-w-[100px] text-ellipsis overflow-hidden">
-                      {item.name}
+                      {item.income_source}
                     </p>
                     <p className="text-sm text-center">{item.amount}</p>
                     <div className="flex items-center justify-center gap-5 my-3">
                       <button
-                        onClick={() => handleIncrement(item.id)}
+                        onClick={() => handleIncrement(item._id)}
                         className="w-[30px] shadow-lightmode dark:shadow-customshadow rounded-lg text-3xl dark:active:shadow-lightmodeclick active:shadow-buttonclick"
                       >
                         +
                       </button>
                       <button
-                        onClick={() => handleDecrement(item.id)}
+                        onClick={() => handleDecrement(item._id)}
                         className="w-[30px] shadow-lightmode dark:shadow-customshadow rounded-lg text-3xl dark:active:shadow-lightmodeclick active:shadow-buttonclick"
                       >
                         -
@@ -67,7 +80,7 @@ function IconItem() {
                 </Tooltip>
               </>
             );
-          })} */}
+          })}
         </div>
       </div>
 

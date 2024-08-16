@@ -7,9 +7,10 @@ import {
   useCreateIncomeMutation,
   useUpdateIncomeMutation,
 } from "@/services/incomeApi";
+import { useCreateSingleIconMutation } from "@/services/singleIconApi";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -22,6 +23,7 @@ export default function CenterModel({
   selectedItem,
   addIconFormFlag,
 }) {
+  console.log("modeltype:", modeltype);
   // console.log("addIconFormFlag", addIconFormFlag);
   const { user } = useSelector((state) => state.auth);
 
@@ -36,6 +38,8 @@ export default function CenterModel({
   // create addiconform
   const [createIncome] = useCreateIncomeMutation();
   const [createExpense] = useCreateExpenseMutation();
+
+  const [createSingleIcon] = useCreateSingleIconMutation();
 
   // update
   const [updateExpense] = useUpdateExpenseMutation();
@@ -150,6 +154,27 @@ export default function CenterModel({
     }
   };
 
+  const handleSingleIcon = async () => {
+    const formData = new FormData();
+    formData.append("user", user._id);
+    formData.append("income_source", formState.source);
+    formData.append("amount", formState.amount);
+
+    if (formState.img) {
+      formData.append("img", formState.img);
+    }
+
+    try {
+      await createSingleIcon(formData).unwrap();
+      toast.success("SingleIcon data Created successfully!");
+
+      clearfn();
+    } catch (error) {
+      console.error("Failed to Creating the item:", error);
+      toast.error("Failed to Creating the item.");
+    }
+  };
+
   return (
     <Transition appear show={isOpenModel} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={closeModal}>
@@ -238,7 +263,15 @@ export default function CenterModel({
                       Cancel
                     </button>
                     <button
-                      onClick={handleSubmitAddIcon}
+                      onClick={() => {
+                        if (modeltype === "edit") {
+                          handleSubmit();
+                        } else if (modeltype === "singleicon") {
+                          handleSingleIcon();
+                        } else if (handleSubmitAddIcon) {
+                          handleSubmitAddIcon();
+                        }
+                      }}
                       className="min-h-[50px] shadow-lightmode dark:shadow-customshadow w-full px-10 mt-5 rounded-lg text-white font-bold active:shadow-lightmodeclick dark:active:shadow-buttonclick"
                     >
                       {modeltype === "edit" ? "Save" : "Add"}

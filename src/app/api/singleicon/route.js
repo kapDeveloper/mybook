@@ -20,6 +20,7 @@ export async function POST(request) {
   const income_source = formData.get("income_source");
   const amount = formData.get("amount");
   const imgFile = formData.get("img");
+  const quantity = formData.get("quantity");
 
   try {
     let imgUrl = "";
@@ -44,6 +45,7 @@ export async function POST(request) {
       income_source,
       amount,
       img: imgUrl,
+      quantity,
     });
     await newSingleIcon.save();
     return NextResponse.json(newSingleIcon, { status: 201 });

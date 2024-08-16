@@ -34,6 +34,7 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
+    "@types/react": "^18.3.3",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",

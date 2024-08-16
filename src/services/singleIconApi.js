@@ -12,7 +12,7 @@ export const singleIconApi = createApi({
       }),
       providesTags: ["SingleIcon"],
     }),
-    createSingleIconData: builder.mutation({
+    createSingleIcon: builder.mutation({
       query: (formData) => {
         if (formData instanceof FormData) {
           return {
@@ -33,7 +33,7 @@ export const singleIconApi = createApi({
       },
       invalidatesTags: ["SingleIcon"],
     }),
-    updateSingleIconData: builder.mutation({
+    updateSingleIcon: builder.mutation({
       query: ({ id, formData }) => {
         if (formData.img) {
           formData.append("img", formData.img);
@@ -52,7 +52,7 @@ export const singleIconApi = createApi({
       },
       invalidatesTags: ["SingleIcon"],
     }),
-    deleteSingleIconData: builder.mutation({
+    deleteSingleIcon: builder.mutation({
       query: (id) => ({
         method: "DELETE",
         body: JSON.stringify({ id }),
